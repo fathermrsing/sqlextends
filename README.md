@@ -1,4 +1,5 @@
 # sqlextends
+〉参考项目： SqlClrJsonParser，但原来项目不支持sql server2008
 1、编写工程
 
 - 创建C#类库
