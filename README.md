@@ -213,6 +213,14 @@ IF NOT EXISTS (SELECT * FROM sys.assemblies WHERE name = 'System_Runtime_Seriali
 	WITH PERMISSION_SET = UNSAFE
 GO
 
+/*如果无法注册C:\Windows\Microsoft.NET\Framework\v3.0\Windows Communication Foundation\System.Runtime.Serialization.dll，可能是因为安装了高版本的.net,尝试：*/
+IF NOT EXISTS (SELECT * FROM sys.assemblies WHERE name = 'System_Runtime_Serialization')
+	CREATE ASSEMBLY System_Runtime_Serialization FROM 'C:\Windows\Microsoft.NET\Framework\v4.0.30319\System.Runtime.Serialization.dll'
+	WITH PERMISSION_SET = UNSAFE
+GO
+
+
+
 IF NOT EXISTS (SELECT * FROM sys.assemblies WHERE name = 'Newtonsoft.Json')
 	CREATE ASSEMBLY [Newtonsoft.Json]
 	FROM 'D:\ebs2_deploy\sqlextends\Newtonsoft.Json.dll'
