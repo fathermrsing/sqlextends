@@ -1,5 +1,8 @@
 # sqlextends
-> 参考项目： SqlClrJsonParser，但原来项目不支持sql server2008,小东西就不讲规范了，大锅烩😂
+> 参考项目： SqlClrJsonParser，但原来项目不支持sql server2008。
+-  [x] 1、实现UTF-8表名的MD5方法sp_fnmd5Hash和存储过程sp_md5Hash，以便通过TSQL调用。
+-  [x] 2、实现json方法：通过path查询json的key值(JsonValue)、json换回表(JsonTable）、数组json中获取指定第几个json的指定key值(JsonArrayValue)
+-  [x] 3、正则表达式方法：替换方法FnRegexReplace、匹配方法FnIsMatch
 
 1、编写工程
 
@@ -289,6 +292,14 @@ AS
  EXTERNAL NAME [all_my_sqlextends].[sqlextends.Md5Class].[JsonArrayValue]
  
 GO
+
+--test
+declare @json varchar(max) = '
+[{a:1},{b:3},{a:2}]'
+select dbo.JsonArrayValue(@json,1,'b')
+
+GO
+
 CREATE FUNCTION [dbo].[JsonTable]
 (@json NVARCHAR (MAX), @path NVARCHAR (MAX))
 RETURNS 
