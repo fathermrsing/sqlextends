@@ -79,6 +79,14 @@ namespace sqlextends
         {
             return new SqlBoolean(Regex.IsMatch(Input, Pattern));
         }
+        
+        [Microsoft.SqlServer.Server.SqlFunction]
+        public static SqlString FnMatchSub(string input, string pattern)
+        {
+            Match match = Regex.Match(input, pattern);
+            SqlString result = match.Success ? match.Value : "";
+            return result;
+        }
 
         [Microsoft.SqlServer.Server.SqlFunction]
         public static SqlString FnRegexReplace(string Input, string Pattern, string Replacement)

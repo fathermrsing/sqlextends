@@ -2,7 +2,7 @@
 > 参考项目： SqlClrJsonParser，但原来项目不支持sql server2008。
 -  [x] 1、实现UTF-8表名的MD5方法sp_fnmd5Hash和存储过程sp_md5Hash，以便通过TSQL调用。
 -  [x] 2、实现json方法：通过path查询json的key值(JsonValue)、json换回表(JsonTable）、数组json中获取指定第几个json的指定key值(JsonArrayValue)
--  [x] 3、正则表达式方法：替换方法FnRegexReplace、匹配方法FnIsMatch
+-  [x] 3、正则表达式方法：替换方法FnRegexReplace、匹配方法FnIsMatch、匹配子串方法FnRegexMatchSub
 
 1、编写工程
 
@@ -95,6 +95,14 @@ namespace sqlextends
         {
             return new SqlBoolean(Regex.IsMatch(Input, Pattern));
         }
+        
+        [Microsoft.SqlServer.Server.SqlFunction]
+        public static SqlString FnMatchSub(string input, string pattern)
+        {
+            Match match = Regex.Match(input, pattern);
+            SqlString result = match.Success ? match.Value : "";
+            return result;
+        }
 
         [Microsoft.SqlServer.Server.SqlFunction]
         public static SqlString FnRegexReplace(string Input, string Pattern, string Replacement)
@@ -136,6 +144,7 @@ namespace sqlextends
             type = item.Type.ToString();
             hasvalues = item.HasValues;
             value = item.ToString();
+     
         }
 
   
@@ -144,6 +153,7 @@ namespace sqlextends
         {
             ArrayList TokenCollection = new ArrayList();
             //count = 0;
+
             try
             {
                 JObject ja = (JObject)JsonConvert.DeserializeObject(json.Value);
@@ -163,14 +173,21 @@ namespace sqlextends
                         TokenCollection.Add(token);
                     }
                 }
+
                 return TokenCollection;
+
             }
             catch
             {
                 return null;
             }
         }
+
+
     }
+
+
+
 }
 ```
 
@@ -193,23 +210,22 @@ RECONFIGURE WITH OVERRIDE
 --EXEC sp_changedbowner 'sa'
 GO 
 
-
 --------------------
 --注意建立一个无关紧要的库来做
 
-USE OARef;
+USE yourdatabase;
 
--- 获取'OARef' 数据库的当前所有者
+-- 获取'yourdatabase' 数据库的当前所有者
 DECLARE @currentOwner nvarchar(100);
 SELECT @currentOwner = SUSER_SNAME(owner_sid) FROM sys.databases WHERE name = 'master';
 
 select @currentOwner
--- 将数据库'OARef' 的所有者更改为'sa'（或其他合适的登录名）
-ALTER AUTHORIZATION ON DATABASE::OARef TO sa;
+-- 将数据库'yourdatabase' 的所有者更改为'sa'（或其他合适的登录名）
+ALTER AUTHORIZATION ON DATABASE::yourdatabase TO sa;
 
 
-USE OARef;
-ALTER DATABASE OARef SET TRUSTWORTHY ON;
+USE yourdatabase;
+ALTER DATABASE yourdatabase SET TRUSTWORTHY ON;
 
 IF NOT EXISTS (SELECT * FROM sys.assemblies WHERE name = 'System_Runtime_Serialization')
 	CREATE ASSEMBLY System_Runtime_Serialization FROM 'C:\Windows\Microsoft.NET\Framework\v3.0\Windows Communication Foundation\System.Runtime.Serialization.dll'
@@ -226,22 +242,29 @@ GO
 
 IF NOT EXISTS (SELECT * FROM sys.assemblies WHERE name = 'Newtonsoft.Json')
 	CREATE ASSEMBLY [Newtonsoft.Json]
-	FROM 'D:\ebs2_deploy\sqlextends\Newtonsoft.Json.dll'
+	FROM 'C:\Program Files\Microsoft SQL Server\Newtonsoft.Json.dll'
 	WITH PERMISSION_SET = UNSAFE
 GO
 
 --drop assembly all_my_sqlextends
 create assembly all_my_sqlextends
-from 'D:\ebs2_deploy\sqlextends\sqlextends.dll'
+from 'C:\Program Files\Microsoft SQL Server\sqlextends.dll'
 go
 
 --- md5 tools
+if( exists(SELECT * FROM SYS.OBJECTS WHERE OBJECT_ID = OBJECT_ID('[DBO].[sp_md5Hash]') AND TYPE = 'FS'))
+drop procedure [DBO].sp_md5Hash
+go
 create procedure dbo.sp_md5Hash (
 @value nvarchar(max), 
 @return nvarchar(max) output
 ) 
 as 
 external name [all_my_sqlextends].[sqlextends.Md5Class].HashString
+go
+
+if( exists(SELECT * FROM SYS.OBJECTS WHERE OBJECT_ID = OBJECT_ID('[DBO].[sp_fnmd5Hash]') AND TYPE = 'FS'))
+drop function [DBO].sp_fnmd5Hash
 go
 
 create function sp_fnmd5Hash (@value nvarchar(max)) RETURNS nvarchar(max) 
@@ -258,13 +281,31 @@ select @res, dbo.sp_fnmd5Hash(@rawtext)
 
 -----Regex tools
 GO
+if( exists(SELECT * FROM SYS.OBJECTS WHERE OBJECT_ID = OBJECT_ID('[DBO].[FnIsMatch]') AND TYPE = 'FS'))
+drop function [DBO].[FnIsMatch]
+go
 CREATE FUNCTION [dbo].[FnIsMatch]
 (@Input NVARCHAR (4000), @Pattern NVARCHAR (4000))
 RETURNS BIT
 AS
  EXTERNAL NAME [all_my_sqlextends].[sqlextends.Md5Class].[FnIsMatch]
  
+ GO
+if( exists(SELECT * FROM SYS.OBJECTS WHERE OBJECT_ID = OBJECT_ID('[DBO].[FnRegexMatchSub]') AND TYPE = 'FS'))
+drop function [DBO].[FnRegexMatchSub]
+go
+--++
+CREATE FUNCTION [dbo].[FnRegexMatchSub]
+(@Input NVARCHAR (4000), @Pattern NVARCHAR (4000))
+RETURNS NVARCHAR (4000)
+AS
+ EXTERNAL NAME [all_my_sqlextends].[sqlextends.Md5Class].[FnMatchSub]
+ go
+--++ 
 GO
+if( exists(SELECT * FROM SYS.OBJECTS WHERE OBJECT_ID = OBJECT_ID('[DBO].[FnRegexReplace]') AND TYPE = 'FS'))
+drop function [DBO].[FnRegexReplace]
+go
 CREATE FUNCTION [dbo].[FnRegexReplace]
 (@Input NVARCHAR (4000), @Pattern NVARCHAR (4000), @Replacement NVARCHAR (4000))
 RETURNS NVARCHAR (4000)
@@ -273,9 +314,13 @@ AS
  
 GO	
 select dbo.FnRegexReplace('A20智乐方绵阳火炬北路店','[\u4e00-\u9fa5]','')
+
  -------- json function
  
  GO
+if( exists(SELECT * FROM SYS.OBJECTS WHERE OBJECT_ID = OBJECT_ID('[DBO].[JsonValue]') AND TYPE = 'FS'))
+drop function [DBO].[JsonValue]
+go
 CREATE FUNCTION [dbo].[JsonValue]
 (@json NVARCHAR (MAX), @path NVARCHAR (MAX))
 RETURNS NVARCHAR (MAX)
@@ -283,8 +328,10 @@ AS
  EXTERNAL NAME [all_my_sqlextends].[sqlextends.Md5Class].[JsonValue]
 
 
- 
 GO
+if( exists(SELECT * FROM SYS.OBJECTS WHERE OBJECT_ID = OBJECT_ID('[DBO].[JsonArrayValue]') AND TYPE = 'FS'))
+drop function [DBO].[JsonArrayValue]
+go
 CREATE FUNCTION [dbo].[JsonArrayValue]
 (@json NVARCHAR (MAX), @rowindex INT, @key NVARCHAR (MAX))
 RETURNS NVARCHAR (MAX)
@@ -299,6 +346,10 @@ declare @json varchar(max) = '
 select dbo.JsonArrayValue(@json,1,'b')
 
 GO
+
+if( exists(SELECT * FROM SYS.OBJECTS WHERE OBJECT_ID = OBJECT_ID('[DBO].[JsonTable]') AND TYPE = 'FS'))
+drop function [DBO].[JsonTable]
+go
 
 CREATE FUNCTION [dbo].[JsonTable]
 (@json NVARCHAR (MAX), @path NVARCHAR (MAX))
@@ -318,5 +369,8 @@ select *,
 , dbo.JsonValue([value], '$.b') AS [b]
 
  from [dbo].[JsonTable]('{"key":"3","value":"test","arr":[{"a":1,"b":2},{"a":"3","b":"5"}]}','$')
+ 
+ select dbo.[FnRegexMatchSub]('电话：13784056631，Apple iPad Air 2024款11英寸WiFi版，购买日期：年月日' ,'\b1\d{10}\b')
+
 ```
 

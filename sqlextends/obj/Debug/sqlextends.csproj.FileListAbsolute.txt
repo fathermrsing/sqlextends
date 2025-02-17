@@ -7,3 +7,9 @@ C:\Users\mrwork\Desktop\sql extend\sqlextends\sqlextends\obj\Debug\sqlextends.cs
 C:\Users\mrwork\Desktop\sql extend\sqlextends\sqlextends\obj\Debug\sqlextends.csproj.CopyComplete
 C:\Users\mrwork\Desktop\sql extend\sqlextends\sqlextends\obj\Debug\sqlextends.dll
 C:\Users\mrwork\Desktop\sql extend\sqlextends\sqlextends\obj\Debug\sqlextends.pdb
+D:\ebs\sqlextends\bin\Debug\sqlextends.dll
+D:\ebs\sqlextends\bin\Debug\sqlextends.pdb
+D:\ebs\sqlextends\bin\Debug\Newtonsoft.Json.xml
+D:\ebs\sqlextends\obj\Debug\sqlextends.csprojResolveAssemblyReference.cache
+D:\ebs\sqlextends\obj\Debug\sqlextends.dll
+D:\ebs\sqlextends\obj\Debug\sqlextends.pdb
