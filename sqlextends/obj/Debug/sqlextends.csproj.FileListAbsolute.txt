@@ -1,15 +1,23 @@
-C:\Users\mrwork\Desktop\sql extend\sqlextends\sqlextends\bin\Debug\sqlextends.dll
-C:\Users\mrwork\Desktop\sql extend\sqlextends\sqlextends\bin\Debug\sqlextends.pdb
-C:\Users\mrwork\Desktop\sql extend\sqlextends\sqlextends\bin\Debug\Newtonsoft.Json.dll
-C:\Users\mrwork\Desktop\sql extend\sqlextends\sqlextends\bin\Debug\Newtonsoft.Json.xml
-C:\Users\mrwork\Desktop\sql extend\sqlextends\sqlextends\obj\Debug\sqlextends.csproj.AssemblyReference.cache
-C:\Users\mrwork\Desktop\sql extend\sqlextends\sqlextends\obj\Debug\sqlextends.csproj.CoreCompileInputs.cache
-C:\Users\mrwork\Desktop\sql extend\sqlextends\sqlextends\obj\Debug\sqlextends.csproj.CopyComplete
-C:\Users\mrwork\Desktop\sql extend\sqlextends\sqlextends\obj\Debug\sqlextends.dll
-C:\Users\mrwork\Desktop\sql extend\sqlextends\sqlextends\obj\Debug\sqlextends.pdb
-D:\ebs\sqlextends\bin\Debug\sqlextends.dll
-D:\ebs\sqlextends\bin\Debug\sqlextends.pdb
-D:\ebs\sqlextends\bin\Debug\Newtonsoft.Json.xml
-D:\ebs\sqlextends\obj\Debug\sqlextends.csprojResolveAssemblyReference.cache
-D:\ebs\sqlextends\obj\Debug\sqlextends.dll
-D:\ebs\sqlextends\obj\Debug\sqlextends.pdb
+C:/Users/mrwork/Desktop/sql extend/sqlextends/sqlextends/bin/Debug/sqlextends.dll
+C:/Users/mrwork/Desktop/sql extend/sqlextends/sqlextends/bin/Debug/sqlextends.pdb
+C:/Users/mrwork/Desktop/sql extend/sqlextends/sqlextends/bin/Debug/Newtonsoft.Json.dll
+C:/Users/mrwork/Desktop/sql extend/sqlextends/sqlextends/bin/Debug/Newtonsoft.Json.xml
+C:/Users/mrwork/Desktop/sql extend/sqlextends/sqlextends/obj/Debug/sqlextends.csproj.AssemblyReference.cache
+C:/Users/mrwork/Desktop/sql extend/sqlextends/sqlextends/obj/Debug/sqlextends.csproj.CoreCompileInputs.cache
+C:/Users/mrwork/Desktop/sql extend/sqlextends/sqlextends/obj/Debug/sqlextends.csproj.CopyComplete
+C:/Users/mrwork/Desktop/sql extend/sqlextends/sqlextends/obj/Debug/sqlextends.dll
+C:/Users/mrwork/Desktop/sql extend/sqlextends/sqlextends/obj/Debug/sqlextends.pdb
+D:/ebs/sqlextends/bin/Debug/sqlextends.dll
+D:/ebs/sqlextends/bin/Debug/sqlextends.pdb
+D:/ebs/sqlextends/bin/Debug/Newtonsoft.Json.xml
+D:/ebs/sqlextends/obj/Debug/sqlextends.csprojResolveAssemblyReference.cache
+D:/ebs/sqlextends/obj/Debug/sqlextends.dll
+D:/ebs/sqlextends/obj/Debug/sqlextends.pdb
+/Users/Mrsing/workspace/workspace_code/created/sqlextends/sqlextends/bin/Debug/sqlextends.dll
+/Users/Mrsing/workspace/workspace_code/created/sqlextends/sqlextends/bin/Debug/sqlextends.pdb
+/Users/Mrsing/workspace/workspace_code/created/sqlextends/sqlextends/bin/Debug/Newtonsoft.Json.xml
+/Users/Mrsing/workspace/workspace_code/created/sqlextends/sqlextends/obj/Debug/sqlextends.csproj.AssemblyReference.cache
+/Users/Mrsing/workspace/workspace_code/created/sqlextends/sqlextends/obj/Debug/sqlextends.csproj.CoreCompileInputs.cache
+/Users/Mrsing/workspace/workspace_code/created/sqlextends/sqlextends/obj/Debug/sqlextends.csproj.CopyComplete
+/Users/Mrsing/workspace/workspace_code/created/sqlextends/sqlextends/obj/Debug/sqlextends.dll
+/Users/Mrsing/workspace/workspace_code/created/sqlextends/sqlextends/obj/Debug/sqlextends.pdb

@@ -87,7 +87,33 @@ namespace sqlextends
             SqlString result = match.Success ? match.Value : "";
             return result;
         }
+        [Microsoft.SqlServer.Server.SqlFunction]
+        public static SqlString FnLongMatchSub(string input, 
+            [SqlFacet(MaxSize = -1)] string patternPart1 = "", 
+            [SqlFacet(MaxSize = -1)] string patternPart2 = "", 
+            [SqlFacet(MaxSize = -1)] string patternPart3 = "")
+        {
+            string pattern = patternPart1 + patternPart2 + patternPart3;
 
+            // 检查正则表达式是否为空，如果为空，则不进行匹配，直接返回空字符串
+            if (string.IsNullOrEmpty(pattern))
+            {
+                return SqlString.Null; // 或者返回 SqlString("")，取决于您的需求
+            }
+
+            try
+            {
+                Match match = Regex.Match(input, pattern);
+                return match.Success ? match.Value : SqlString.Null; // 或者返回 SqlString("")
+            }
+            catch (Exception ex)
+            {
+                // 处理正则表达式解析异常，例如记录日志或返回错误信息
+                // 这里简单地返回空字符串
+                return SqlString.Null; // 或者抛出异常
+            }
+        }
+        
         [Microsoft.SqlServer.Server.SqlFunction]
         public static SqlString FnRegexReplace(string Input, string Pattern, string Replacement)
         {

@@ -2,4 +2,6 @@
 	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;
   &lt;Assembly Path="/Library/Frameworks/Mono.framework/Versions/6.12.0/lib/mono/2.0-api/System.Data.dll" /&gt;
   &lt;Assembly Path="/Library/Frameworks/Mono.framework/Versions/6.12.0/lib/mono/2.0-api/System.dll" /&gt;
-&lt;/AssemblyExplorer&gt;</s:String></wpf:ResourceDictionary>
+&lt;/AssemblyExplorer&gt;</s:String>
+	<s:String x:Key="/Default/Environment/Hierarchy/Build/BuildTool/CustomBuildToolPath/@EntryValue">/Library/Frameworks/Mono.framework/Versions/6.12.0/lib/mono/msbuild/15.0/bin/MSBuild.dll</s:String>
+	</wpf:ResourceDictionary>

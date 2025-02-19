@@ -95,14 +95,6 @@ namespace sqlextends
         {
             return new SqlBoolean(Regex.IsMatch(Input, Pattern));
         }
-        
-        [Microsoft.SqlServer.Server.SqlFunction]
-        public static SqlString FnMatchSub(string input, string pattern)
-        {
-            Match match = Regex.Match(input, pattern);
-            SqlString result = match.Success ? match.Value : "";
-            return result;
-        }
 
         [Microsoft.SqlServer.Server.SqlFunction]
         public static SqlString FnRegexReplace(string Input, string Pattern, string Replacement)
@@ -144,7 +136,6 @@ namespace sqlextends
             type = item.Type.ToString();
             hasvalues = item.HasValues;
             value = item.ToString();
-     
         }
 
   
@@ -153,7 +144,6 @@ namespace sqlextends
         {
             ArrayList TokenCollection = new ArrayList();
             //count = 0;
-
             try
             {
                 JObject ja = (JObject)JsonConvert.DeserializeObject(json.Value);
@@ -173,21 +163,14 @@ namespace sqlextends
                         TokenCollection.Add(token);
                     }
                 }
-
                 return TokenCollection;
-
             }
             catch
             {
                 return null;
             }
         }
-
-
     }
-
-
-
 }
 ```
 
@@ -252,7 +235,7 @@ from 'C:\Program Files\Microsoft SQL Server\sqlextends.dll'
 go
 
 --- md5 tools
-if( exists(SELECT * FROM SYS.OBJECTS WHERE OBJECT_ID = OBJECT_ID('[DBO].[sp_md5Hash]') AND TYPE = 'FS'))
+if( exists(SELECT * FROM SYS.OBJECTS WHERE OBJECT_ID = OBJECT_ID('[DBO].[sp_md5Hash]') AND TYPE = 'PC'))
 drop procedure [DBO].sp_md5Hash
 go
 create procedure dbo.sp_md5Hash (
@@ -290,18 +273,27 @@ RETURNS BIT
 AS
  EXTERNAL NAME [all_my_sqlextends].[sqlextends.Md5Class].[FnIsMatch]
  
- GO
+GO
 if( exists(SELECT * FROM SYS.OBJECTS WHERE OBJECT_ID = OBJECT_ID('[DBO].[FnRegexMatchSub]') AND TYPE = 'FS'))
 drop function [DBO].[FnRegexMatchSub]
 go
---++
+
 CREATE FUNCTION [dbo].[FnRegexMatchSub]
-(@Input NVARCHAR (4000), @Pattern NVARCHAR (4000))
+(@Input NVARCHAR (4000), @Pattern NVARCHAR (max))
 RETURNS NVARCHAR (4000)
 AS
- EXTERNAL NAME [all_my_sqlextends].[sqlextends.Md5Class].[FnMatchSub]
- go
---++ 
+ EXTERNAL NAME [all_my_sqlextends].[sqlextends.Md5Class].[FnMatchSub] 
+GO
+
+if( exists(SELECT * FROM SYS.OBJECTS WHERE OBJECT_ID = OBJECT_ID('[DBO].[FnRegexLongMatchSub]') AND TYPE = 'FS'))
+drop function [DBO].[FnRegexLongMatchSub]
+go
+CREATE FUNCTION [dbo].[FnRegexLongMatchSub]
+(@Input NVARCHAR (4000), @Pattern1 NVARCHAR (max),@Pattern2 NVARCHAR (max),@Pattern3 NVARCHAR (max))
+RETURNS NVARCHAR (4000)
+AS
+ EXTERNAL NAME [all_my_sqlextends].[sqlextends.Md5Class].FnLongMatchSub
+
 GO
 if( exists(SELECT * FROM SYS.OBJECTS WHERE OBJECT_ID = OBJECT_ID('[DBO].[FnRegexReplace]') AND TYPE = 'FS'))
 drop function [DBO].[FnRegexReplace]
@@ -347,7 +339,7 @@ select dbo.JsonArrayValue(@json,1,'b')
 
 GO
 
-if( exists(SELECT * FROM SYS.OBJECTS WHERE OBJECT_ID = OBJECT_ID('[DBO].[JsonTable]') AND TYPE = 'FS'))
+if( exists(SELECT * FROM SYS.OBJECTS WHERE OBJECT_ID = OBJECT_ID('[DBO].[JsonTable]') AND TYPE = 'FT'))
 drop function [DBO].[JsonTable]
 go
 
@@ -365,12 +357,11 @@ AS
 go
 select *,
 	dbo.JsonValue([value], '$.key') AS [key],
-	dbo.JsonValue([value], '$.a') AS [a]
-, dbo.JsonValue([value], '$.b') AS [b]
-
+	dbo.JsonValue([value], '$.a') AS [a], 
+	dbo.JsonValue([value], '$.b') AS [b]
  from [dbo].[JsonTable]('{"key":"3","value":"test","arr":[{"a":1,"b":2},{"a":"3","b":"5"}]}','$')
  
- select dbo.[FnRegexMatchSub]('电话：13784056631，Apple iPad Air 2024款11英寸WiFi版，购买日期：年月日' ,'\b1\d{10}\b')
+select dbo.[FnRegexMatchSub]('电话：13784056631，Apple iPad Air 2024款11英寸WiFi版，购买日期：年月日' ,'\b1\d{10}\b')
 
 ```
 
