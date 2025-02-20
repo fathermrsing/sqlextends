@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Security.Cryptography;
-using System.Data;
 using System.Data.SqlTypes;
 using Microsoft.SqlServer.Server;
 using System.Text.RegularExpressions;
@@ -15,7 +14,6 @@ namespace sqlextends
     public class JsonTableHelper
     {
         private int count = 0;
-
         public void FillRowFromJson(Object token, out SqlString path, out SqlString value, out SqlString type, out SqlBoolean hasvalues, out SqlInt32 index)
         {
             JToken item = (JToken)token;
@@ -75,9 +73,9 @@ namespace sqlextends
         }
 
         [Microsoft.SqlServer.Server.SqlFunction]
-        public static SqlBoolean FnIsMatch(string Input, string Pattern)
+        public static SqlBoolean FnIsMatch(string input, string pattern)
         {
-            return new SqlBoolean(Regex.IsMatch(Input, Pattern));
+            return new SqlBoolean(Regex.IsMatch(input, pattern));
         }
         
         [Microsoft.SqlServer.Server.SqlFunction]
@@ -138,7 +136,7 @@ namespace sqlextends
             }
         }
 
-        [Microsoft.SqlServer.Server.SqlFunction]
+        [SqlFunction]
         public static SqlString JsonArrayValue(SqlString json, SqlInt32 rowindex, SqlString key)
         {
             JArray ja = (JArray)JsonConvert.DeserializeObject(json.Value);
